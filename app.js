@@ -1,8 +1,10 @@
 const express = require('express');
+const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const cookieParse = require('cookie-parser');
+
 const app = express();
 
 //Load User model
@@ -12,6 +14,7 @@ require('./models/UserModel');
 require('./config/passport')(passport);
 
 //Load routes
+const index = require('./routes/index');
 const auth = require('./routes/auth');
 
 //Load keys
@@ -25,7 +28,13 @@ mongoose.connect(keys.mongoURI)
          .then(()=> console.log('MongoDB connected'))
          .catch(err => console.log(err));
 
-         //express-session middleware
+app.engine('handlebars',exphbs({
+    defaultLayout: 'main'
+}));
+app.set('view engine','handlebars');
+
+//app.use(cookieParser());
+//express-session middleware
 app.use(session({
     secret: 'secret',
     resave: false,
@@ -42,11 +51,8 @@ app.use((req,res,next)=>{
     next();
 });
 
-
-app.get('/',(req,res) => {
-    res.send('Welcome to Storybooks!');
-});
-
+//Map routes
+app.use('/',index);
 app.use('/auth',auth);
 
 const port = process.env.PORT || 5000
