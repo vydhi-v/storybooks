@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const exphbs = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -60,3 +61,6 @@ const port = process.env.PORT || 5000
 app.listen(port,() => {
     console.log(`server started on port ${port}`);
 });
+
+//Static resource directory
+app.use(express.static(path.join(__dirname,'public')));
