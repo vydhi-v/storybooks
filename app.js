@@ -5,11 +5,18 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const cookieParse = require('cookie-parser');
-
+const bodyParser = require('body-parser');
 const app = express();
 
-//Load User model
+//Bpodyparser middleware
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
+
+//Load models
 require('./models/UserModel');
+require('./models/StoryModel');
 
 //Passport config
 require('./config/passport')(passport);
