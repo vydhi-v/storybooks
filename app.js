@@ -28,6 +28,9 @@ const stories = require('./routes/stories');
 //Load keys
 const keys = require('./config/keys');
 
+//Handlebars helpers
+const hbsHelpers = require('./helpers/hbs');
+
 //Map global promises
 mongoose.Promise = global.Promise;
 
@@ -37,6 +40,11 @@ mongoose.connect(keys.mongoURI)
          .catch(err => console.log(err));
 
 app.engine('handlebars',exphbs({
+    helpers:{
+        truncate: hbsHelpers.truncate,
+        stripHTMLTags: hbsHelpers.stripHTMLTags,
+        formatDate: hbsHelpers.formatDate
+    },
     defaultLayout: 'main'
 }));
 app.set('view engine','handlebars');

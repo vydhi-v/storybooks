@@ -7,7 +7,16 @@ const User = mongoose.model('users');
 
 //Stories index
 router.get('/',(req,res) => {
-    res.render('stories/index')
+    Story.find({
+        status: 'public'
+    })
+    .populate('user')
+    .then(stories => {
+        res.render('stories/index', {
+            stories: stories
+        });
+    });
+    
 });
 
 //Add Story form
@@ -36,10 +45,20 @@ router.post('/', (req,res) =>{
         .save()
         .then(story => {
             res.redirect(`/stories/show/${story.id}`)
-        })
-    res.send('sent');
+        });    
 });
 
-
+//show single story
+router.get('/show/:id',(req,res)=>{
+    Story.findOne({
+        _id : req.params.id
+    })
+    .populate('user')
+    .then(story => {
+        res.render('stories/show',{
+            story:story
+        });
+    });    
+});
 
 module.exports = router;
